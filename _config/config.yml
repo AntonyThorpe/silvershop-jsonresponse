@@ -1,0 +1,6 @@
+---
+Name: shopconfig
+After: silvershop/config#shopconfig
+---
+Product_Image:
+  cart_image_width: 45

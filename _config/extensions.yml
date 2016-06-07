@@ -1,0 +1,19 @@
+---
+Name: silvershop-jsonresponse
+After: silvershop/config#shopconfig
+---
+ShoppingCart_Controller:
+  extensions:
+    - SilvershopJsonResponse
+VariationForm:
+  extensions:
+    - SilvershopJsonResponse
+AddProductForm:
+  extensions:
+    - SilvershopJsonResponse
+CartForm:
+  extensions:
+    - SilvershopJsonResponse
+CartPage_Controller:
+  extensions:
+    - SilvershopJsonResponse
