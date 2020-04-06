@@ -8,12 +8,7 @@ php:
 sudo: false
 
 env:
- - DB=MYSQL CORE_RELEASE=3.4 PDO=1
-
-matrix:
-  include:
-   - php: 5.5
-     env: DB=PGSQL CORE_RELEASE=3.3
+ - DB=MYSQL CORE_RELEASE=3.7 PDO=1
 
 before_script:
  - phpenv rehash
