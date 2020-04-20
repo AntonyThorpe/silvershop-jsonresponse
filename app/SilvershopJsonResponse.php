@@ -1,5 +1,15 @@
 <?php
 
+namespace AntonyThorpe\SilverShopJsonResponse;
+
+use SilverStripe\Core\Extension;
+use SilverStripe\Control\HTTPRequest;
+use SilverShop\Cart\ShoppingCart;
+use SilverShop\Page\Product;
+use SilverShop\Extension\ProductImageExtension;
+use SilverShop\Extension\ProductVariationsExtension;
+use SilverShop\Model\Variation\Variation;
+
 /**
  * ShopJsonResponse
  *
@@ -21,10 +31,10 @@ class SilvershopJsonResponse extends Extension
      * @param SS_HTTPRequest $request
      * @return SS_HTTPResponse $response with JSON body
      */
-    public function get(SS_HTTPRequest $request)
+    public function get(HTTPRequest $request)
     {
         if (!$request->isAjax()) {
-            return $this->owner->httpError(404, _t("ShoppingCart.GETCARTAJAXONLY", "Ajax request only Bo"));
+            return $this->owner->httpError(404, _t(ShoppingCart::class . 'GetCartAjaxOnly', 'Ajax request only Bo'));
         }
         $response = $this->owner->getResponse();
         $response->removeHeader('Content-Type');
@@ -374,7 +384,6 @@ class SilvershopJsonResponse extends Extension
 
         if ($items->exists()) {
             foreach ($items->getIterator() as $item) {
-
                 // Definitions
                 $data = array();
                 $product = $item->Product();
@@ -392,7 +401,8 @@ class SilvershopJsonResponse extends Extension
                 $data["setquantityLink"] = $item->setquantityLink();
 
                 // Image
-                if ($image = $item->Image()->ScaleWidth((int) Product_Image::config()->cart_image_width)) {
+                if ($item->Image()) {
+                    $image = $item->Image()->ScaleWidth((int) ProductImageExtension::config()->cart_image_width);
                     $data["image"] = array(
                         'alt' => $image->Title,
                         'src' => $image->Filename,
@@ -402,10 +412,11 @@ class SilvershopJsonResponse extends Extension
                 }
 
                 // Variations
-                if ($product->has_many("Variations")) {
+                $extension = Product::has_extension(ProductVariationsExtension::class);
+                if ($extension && Variation::get()->filter('ProductID', $item->ID)->first()) {
                     $variations = $product->Variations();
                     if ($variations->exists()) {
-                        $data['variations'] = array();
+                        $data['variations'] = [];
                         foreach ($variations as $variation) {
                             $data['variations'][] = array(
                                 'id' => (string) $variation->ID,
@@ -435,7 +446,7 @@ class SilvershopJsonResponse extends Extension
                 if ($modifier->ShowInTable()) {
                     $data = array(
                         'id' => (string) $modifier->ID,
-                        'tableTitle' => $modifier->TableTitle(),
+                        'tableTitle' => $modifier->getTableTitle(),
                         'tableValue' => (float) $modifier->TableValue(),
                     );
 

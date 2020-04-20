@@ -1,13 +1,16 @@
 inherit: true
 
-tools:
-  external_code_coverage: false
-  php_code_sniffer:
-    config:
-      standard: "PSR2"
-  php_cs_fixer:
-    config:
-      level: "PSR2"
+build:
+  dependencies:
+    before:
+     - composer require --prefer-source --no-update silverstripe/recipe-cms:^4
+     - composer require silverstripe/vendor-plugin:^1.0 silvershop/silverstripe-listsorter:^3@dev silvershop/silverstripe-sqlquerylist:^2@dev php-http/buzz-adapter omnipay/common:^3.0.2 silverstripe/silverstripe-omnipay:3@dev --no-update --prefer-dist --prefer-stable
+     - composer require silvershop/core:^3.0.2 --no-update --prefer-dist --prefer-stable
+     - composer install --prefer-dist --no-interaction --no-progress --no-suggest --optimize-autoloader --verbose --profile
+  nodes:
+    analysis:
+      tests:
+        override: [php-scrutinizer-run]
 
 checks:
   php:
@@ -15,4 +18,4 @@ checks:
     duplication: true
 
 filter:
-  paths: [code/*, tests/*]
+  paths: [src/*, tests/*]

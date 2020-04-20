@@ -1,4 +1,4 @@
-# Documentation of Silvershop JSON Response
+# Documentation of SilverShop JSON Response
 
 ## Example of returned JSON data following adding an item to the Cart
 ```json
@@ -93,9 +93,13 @@ To get a copy of the current shopping cart call `shoppingcart/get`.  This provid
 * Items and Modifications as listed above
 * Plus the Subtotal and Grandtotal
 
-## An Ajax Example from a Product Page using Knockoutjs
-Add a submit binding handlier to the form via `updateForm` on the Product_ControllerExtension class.
+## An Ajax Example for the Product Page using Knockoutjs
+Add a submit binding handler to the form via `updateForm` on the Product_ControllerExtension class.
 ```php
+namespace Your\Nampspace;
+
+use SilverStripe\ORM\DataExtension;
+
 class Product_ControllerExtension extends DataExtension
 {
     public function updateForm(&$form)
@@ -104,15 +108,15 @@ class Product_ControllerExtension extends DataExtension
     }
 }
 ```
-In mysite/config/config.yml
+In `app/config/config.yml`
 ```yml
-Product_Controller:
+SilverShop\Page\ProductController:
   extensions:
-    - Product_ControllerExtension
+    - Your\Nampspace\Product_ControllerExtension
 ```
-After a dev/build this sets the data-bind attribute to capture the submit event:
+After a `dev/build` this sets the data-bind attribute to capture the submit event:
 ```html
-<form id="..." action="/products/rugby/worldcupjersey/Form" method="post" enctype="application/x-www-form-urlencoded" class="addproductform" data-bind="submit: addToCartProductPage" role="form">
+<form data-bind="submit: addToCartProductPage" id="blah" action="/products/rugby/worldcupjersey/Form" method="post" enctype="application/x-www-form-urlencoded" class="addproductform" role="form">
 ```
 And in javascript capture the click event, extract the data from the formElement and send an ajax message to the server:
 ```javascipt
@@ -134,6 +138,3 @@ this.addToCartProductPage = function(formElement) {
        // opps
 });
 ```
-
-
-

@@ -1,4 +1,5 @@
-# Change Log of Silvershop JSON Response
+# Change Log of SilverShop JSON Response
 
-* 2.0.0 Update for Silvershop v2
+* 3.0.0 update for SilverShop v3
+* 2.0.0 Update for SilverShop v2
 * 1.0.0 Initial Release

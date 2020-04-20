@@ -1,0 +1,3 @@
+mappings:
+  SilvershopJsonResponse: AntonyThorpe\SilverShopJsonResponse\SilvershopJsonResponse
+  SilvershopJsonResponseTest: AntonyThorpe\SilverShopJsonResponse\Tests\SilvershopJsonResponseTest
