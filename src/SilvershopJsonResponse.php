@@ -69,7 +69,7 @@ class SilvershopJsonResponse extends Extension
             $data = array(
                 'id' => (string) $product->ID,
                 'internalItemID' => $product->InternalItemID,
-                'title' => $product->Title,
+                'title' => $product->getTitle(),
                 'url' => $product->URLSegment,
                 'categories' => $product->getCategories()->column('Title'),
                 'message' => array(
@@ -280,8 +280,8 @@ class SilvershopJsonResponse extends Extension
             $data = array(
                 'id' => (string) $variation->ID,
                 'message' => array(
-                    'content' => $form->Message(),
-                    'type' => $form->MessageType(),
+                    'content' => $form->getMessage(),
+                    'type' => $form->getMessageType(),
                 ),
             );
             $form->clearMessage();
@@ -321,7 +321,7 @@ class SilvershopJsonResponse extends Extension
             $data = array(
                 'id' => (string) $buyable->ID,
                 'internalItemID' => $buyable->InternalItemID,
-                'title' => $buyable->Title,
+                'title' => $buyable->getTitle(),
                 'url' => $buyable->URLSegment,
                 'categories' => $buyable->getCategories()->column('Title'),
                 'addLink' => $buyable->addLink(),
@@ -329,8 +329,8 @@ class SilvershopJsonResponse extends Extension
                 'removeallLink' => $buyable->removeallLink(),
                 'setquantityLink' => $buyable->Item()->setquantityLink(),
                 'message' => array(
-                    'content' => $form->Message(),
-                    'type' => $form->MessageType(),
+                    'content' => $form->getMessage(),
+                    'type' => $form->getMessageType(),
                 ),
             );
             $form->clearMessage();
@@ -390,7 +390,7 @@ class SilvershopJsonResponse extends Extension
 
                 $data["id"] = (string) $item->ProductID;
                 $data["internalItemID"] = $product->InternalItemID;
-                $data["title"] = $product->Title;
+                $data["title"] = $product->getTitle();
                 $data["quantity"] = (int) $item->Quantity;
                 $data["unitPrice"] = $product->getPrice();
                 $data["href"] = $item->Link();
@@ -404,10 +404,10 @@ class SilvershopJsonResponse extends Extension
                 if ($item->Image()) {
                     $image = $item->Image()->ScaleWidth((int) ProductImageExtension::config()->cart_image_width);
                     $data["image"] = array(
-                        'alt' => $image->Title,
-                        'src' => $image->Filename,
-                        'width' => $image->Width,
-                        'height' => $image->Height,
+                        'alt' => $image->getTitle(),
+                        'src' => $image->getAbsoluteURL(),
+                        'width' => $image->getWidth(),
+                        'height' => $image->getHeight(),
                     );
                 }
 
@@ -420,7 +420,7 @@ class SilvershopJsonResponse extends Extension
                         foreach ($variations as $variation) {
                             $data['variations'][] = array(
                                 'id' => (string) $variation->ID,
-                                'title' => $variation->Title,
+                                'title' => $variation->getTitle(),
                             );
                         }
                     }
