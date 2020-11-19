@@ -101,6 +101,10 @@ class SilvershopJsonResponse extends Extension
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
             }
 
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
+            }
+
             $this->owner->extend('updateAddResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
             $response->setBody(json_encode($data));
         }
@@ -140,6 +144,10 @@ class SilvershopJsonResponse extends Extension
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
             }
 
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
+            }
+
             $this->owner->extend('updateRemoveResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
             $response->setBody(json_encode($data));
         }
@@ -177,6 +185,10 @@ class SilvershopJsonResponse extends Extension
             if ($shoppingcart) {
                 $data['subTotal'] = $shoppingcart->SubTotal();
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
+            }
+
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
             }
 
             $this->owner->extend('updateRemoveAllResponseShopJsonResponse', $data, $request, $response, $product);
@@ -220,6 +232,10 @@ class SilvershopJsonResponse extends Extension
             if ($shoppingcart) {
                 $data['subTotal'] = $shoppingcart->SubTotal();
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
+            }
+
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
             }
 
             $this->owner->extend('updateSetQuantityResponseShopJsonResponse', $data, $request, $response, $product, $currentquantity);
@@ -292,6 +308,10 @@ class SilvershopJsonResponse extends Extension
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
             }
 
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
+            }
+
             $this->owner->extend('updateVariationFormResponseShopJsonResponse', $data, $request, $response, $variation, $quantity, $form);
             $response->setBody(json_encode($data));
         }
@@ -339,6 +359,10 @@ class SilvershopJsonResponse extends Extension
             if ($shoppingcart) {
                 $data['subTotal'] = $shoppingcart->SubTotal();
                 $data['grandTotal'] = $shoppingcart->GrandTotal();
+            }
+
+            if ($modifiers = $this->getCurrentShoppingCartModifiers()) {
+                $data['modifiers'] = $modifiers;
             }
 
             $this->owner->extend('updateAddProductFormResponseShopJsonResponse', $data, $request, $response, $buyable, $quantity, $form);
