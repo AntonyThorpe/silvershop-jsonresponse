@@ -317,6 +317,9 @@ class SilverShopJsonResponseTest extends FunctionalTest
         $ballRoot->publish('Stage', 'Live');
         $ball1 = $this->objFromFixture(Variation::class, 'redlarge');
         $ball2 = $this->objFromFixture(Variation::class, 'redsmall');
+        $this->logInWithPermission('ADMIN');
+        $ball1->publishSingle();
+        $ball2->publishSingle();
 
         // Add the two variation items
         $response = $this->get(ShoppingCartController::add_item_link($ball1) . "?ajax=1");
