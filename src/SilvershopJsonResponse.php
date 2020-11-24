@@ -343,8 +343,8 @@ class SilvershopJsonResponse extends Extension
                 }
 
                 // Variations
-                if ($subtitle = $item->SubTitle()) {
-                    $data['subtitle'] = $subtitle;
+                if (method_exists($item, 'SubTitle')) {
+                    $data['subtitle'] = $item->SubTitle();
                 }
 
                 $result[] = $data;
