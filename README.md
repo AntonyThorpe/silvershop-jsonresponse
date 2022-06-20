@@ -1,7 +1,7 @@
 # silvershop-jsonresponse
 SilverShop submodule that provides JSON responses for cart updates
 
-[![Build Status](https://travis-ci.org/AntonyThorpe/silvershop-jsonresponse.svg?branch=master)](https://travis-ci.org/AntonyThorpe/silvershop-jsonresponse)
+[![CI](https://github.com/AntonyThorpe/silvershop-jsonresponse/actions/workflows/ci.yml/badge.svg)](https://github.com/AntonyThorpe/silvershop-jsonresponse/actions/workflows/ci.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/AntonyThorpe/silvershop-jsonresponse/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/AntonyThorpe/silvershop-jsonresponse/?branch=master)
 [![Latest Stable Version](https://poser.pugx.org/antonythorpe/silvershop-jsonresponse/v/stable)](https://packagist.org/packages/antonythorpe/silvershop-jsonresponse)
 [![Total Downloads](https://poser.pugx.org/antonythorpe/silvershop-jsonresponse/downloads)](https://packagist.org/packages/antonythorpe/silvershop-jsonresponse)
