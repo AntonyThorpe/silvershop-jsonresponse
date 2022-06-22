@@ -34,7 +34,7 @@ class SilverShopJsonResponseTest extends FunctionalTest
         parent::setUpOnce();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         ShopTest::setConfiguration(); //reset config
@@ -68,27 +68,27 @@ class SilverShopJsonResponseTest extends FunctionalTest
 
         $response = $this->get("shoppingcart/get" . "?ajax=1");
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'tableTitle',
             $response->getBody(),
             "Json contains tableTitle"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'tableValue',
             $response->getBody(),
             "Json contains tableValue"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Tax @ 15.0%',
             $response->getBody(),
             "Contains GST modifier in the response"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"subTotal":1008',
             $response->getBody(),
             "Contains SubTotal of 1008"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"grandTotal":1159.2',
             $response->getBody(),
             "Contains a GrandTotal of 1159.2; the GST amount (the Flat Tax Modifier) is the difference"
@@ -114,32 +114,32 @@ class SilverShopJsonResponseTest extends FunctionalTest
             "Contains json in the body of the response"
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             "addLink",
             $response->getBody(),
             "response contains a link to add additional quantities of an item in the cart"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "removeLink",
             $response->getBody(),
             "response contains a link to reduce the quantity of an item in a cart"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "removeallLink",
             $response->getBody(),
             "response contains a link to remove all of an item from a cart"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "setquantityLink",
             $response->getBody(),
             "response contains a link to set the quantity of an item in a cart"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "unitPrice",
             $response->getBody(),
             "response contains the unit price of items in a cart"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "subTotal",
             $response->getBody(),
             "response contains a subTotal when include_totals is set to true"
@@ -164,12 +164,12 @@ class SilverShopJsonResponseTest extends FunctionalTest
         $shoppingcart = ShoppingCart::curr()->calculate();  // recalculate the shopping cart
 
         $cart = $this->get("shoppingcart/get" . "?ajax=1");
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"title":"Mp3 Player"',
             $cart->getBody(),
             "Contains the mp3 player"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '"title":"Socks"',
             $cart->getBody(),
             "Contains the socks"
@@ -267,7 +267,7 @@ class SilverShopJsonResponseTest extends FunctionalTest
             "Contains json in the body of the response"
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Quantity has been set',
             $response->getBody(),
             "Contains a confirmation message that the quantity has been set to a new value"
@@ -297,7 +297,7 @@ class SilverShopJsonResponseTest extends FunctionalTest
             "Contains json in the body of the response"
         );
 
-        $this->assertContains(
+        $this->assertStringContainsString(
             'Cart was successfully cleared',
             $response->getBody(),
             "Contains a message that the cart has been cleared"
@@ -337,7 +337,7 @@ class SilverShopJsonResponseTest extends FunctionalTest
             $response->getBody(),
             "Contains json in the body of the response"
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             "Size:Large, Color:Red",
             $response->getBody(),
             "Contains json in the body of the cart id"

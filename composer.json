@@ -8,9 +8,6 @@
 		"silvershop/core": "^3.0",
         "silverstripe/vendor-plugin": "^1"
 	},
-	"require-dev": {
-		"phpunit/phpunit": "^5.7"
-	},
     "autoload": {
         "psr-4": {
             "AntonyThorpe\\SilverShopJsonResponse\\": "src/"
