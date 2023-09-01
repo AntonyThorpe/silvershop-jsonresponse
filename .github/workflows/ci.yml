@@ -13,3 +13,4 @@ jobs:
     with:
       composer_require_extra:
         phpunit/phpunit:^9.5
+        php-http/discovery:^1.18.1
