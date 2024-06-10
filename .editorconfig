@@ -19,3 +19,8 @@ indent_style = space
 
 [composer.json]
 indent_size = 4
+
+# Don't perform any clean-up on thirdparty files
+[thirdparty/**]
+trim_trailing_whitespace = false
+insert_final_newline = false

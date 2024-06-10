@@ -3,12 +3,10 @@
 namespace AntonyThorpe\SilverShopJsonResponse;
 
 use SilverShop\Cart\ShoppingCart;
-use SilverShop\Page\Product;
 use SilverShop\Extension\ProductImageExtension;
 use SilverShop\Forms\AddProductForm;
 use SilverShop\Forms\VariationForm;
 use SilverShop\Model\Buyable;
-use SilverShop\Model\Variation\Variation;
 use SilverStripe\Core\Extension;
 use SilverStripe\Control\HTTPRequest;
 use SilverStripe\Control\HTTPResponse;
@@ -24,46 +22,40 @@ class SilvershopJsonResponse extends Extension
     /**
      * Allow get action to obtain a copy of the shopping cart
      */
-    private static $allowed_actions = array(
-        'get'
-    );
+    private static array $allowed_actions = ['get'];
 
     /**
      * get the shopping cart
      *
-     * @param HTTPRequest $request
      * @return HTTPResponse $response with JSON body
      */
     public function get(HTTPRequest $request)
     {
         if (!$request->isAjax()) {
-            return $this->owner->httpError(404, _t(ShoppingCart::class . 'GetCartAjaxOnly', 'Ajax request only Bo'));
+            return $this->getOwner()->httpError(404, _t(ShoppingCart::class . 'GetCartAjaxOnly', 'Ajax request only Bo'));
         }
-        $response = $this->owner->getResponse();
+        $response = $this->getOwner()->getResponse();
         $response->removeHeader('Content-Type');
         $response->addHeader('Content-Type', 'application/json; charset=utf-8');
-
         $data = $this->getCurrentShoppingCart();
-
-        $this->owner->extend('updateGet', $data, $request, $response);
-        return $response->setBody(json_encode($data));
+        $this->getOwner()->extend('updateGet', $data, $request, $response);
+        return $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
     }
 
     /**
      * Add one of an item to a cart (Category Page)
      *
-     * @see 'add' function of ShoppingCart_Controller ($this->owner)
+     * @see 'add' function of SilverShop\Cart\ShoppingCartController ($this->getOwner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $product [optional]
-     * @param int $quantity [optional]
+     * @param string $response
+     * @param Buyable $product
+     * @param int $quantity
      */
-    public function updateAddResponse(&$request, &$response, $product = null, $quantity = 1)
+    public function updateAddResponse(&$request, &$response, $product = null, $quantity = 1): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $responseMessage = $response;
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -71,13 +63,13 @@ class SilvershopJsonResponse extends Extension
 
             $data = $this->getCurrentShoppingCart();
             $data['message'] = [
-                'content' => $this->owner->cart->getMessage(),
-                'type' => $this->owner->cart->getMessageType()
+                'content' => $responseMessage,
+                'type' => $this->getOwner()->cart->getMessageType()
             ];
-            $this->owner->cart->clearMessage();
+            $this->getOwner()->cart->clearMessage();
 
-            $this->owner->extend('updateAddResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateAddResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -86,16 +78,15 @@ class SilvershopJsonResponse extends Extension
      *
      * @see 'remove' function of ShoppingCart_Controller ($this->owner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $product [optional]
-     * @param int $quantity [optional]
+     * @param string $response
+     * @param Buyable $product
+     * @param int $quantity
      */
-    public function updateRemoveResponse(&$request, &$response, $product = null, $quantity = 1)
+    public function updateRemoveResponse(&$request, &$response, $product = null, $quantity = 1): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $responseMessage = $response;
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -103,13 +94,13 @@ class SilvershopJsonResponse extends Extension
 
             $data = $this->getCurrentShoppingCart();
             $data['message'] = [
-                'content' => $this->owner->cart->getMessage(),
-                'type' => $this->owner->cart->getMessageType()
+                'content' => $responseMessage,
+                'type' => $this->getOwner()->cart->getMessageType()
             ];
-            $this->owner->cart->clearMessage();
+            $this->getOwner()->cart->clearMessage();
 
-            $this->owner->extend('updateRemoveResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateRemoveResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -119,15 +110,14 @@ class SilvershopJsonResponse extends Extension
      *
      * @see 'removeall' function of ShoppingCart_Controller ($this->owner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $product [optional]
+     * @param string $response
+     * @param Buyable $product
      */
-    public function updateRemoveAllResponse(&$request, &$response, $product = null)
+    public function updateRemoveAllResponse(&$request, &$response, $product = null): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $responseMessage = $response;
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -135,13 +125,13 @@ class SilvershopJsonResponse extends Extension
 
             $data = $this->getCurrentShoppingCart();
             $data['message'] = [
-                'content' => $this->owner->cart->getMessage(),
-                'type' => $this->owner->cart->getMessageType()
+                'content' => $responseMessage,
+                'type' => $this->getOwner()->cart->getMessageType()
             ];
-            $this->owner->cart->clearMessage();
+            $this->getOwner()->cart->clearMessage();
 
-            $this->owner->extend('updateRemoveAllResponseShopJsonResponse', $data, $request, $response, $product);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateRemoveAllResponseShopJsonResponse', $data, $request, $response, $product);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -150,16 +140,14 @@ class SilvershopJsonResponse extends Extension
      *
      * @see 'setquantity' function of ShoppingCart_Controller ($this->owner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $product [optional]
-     * @param int $quantity [optional]
+     * @param string $response
+     * @param Buyable $product
+     * @param int $quantity
      */
-    public function updateSetQuantityResponse(&$request, &$response, $product = null, $quantity = 1)
+    public function updateSetQuantityResponse(&$request, &$response, $product = null, $quantity = 1): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -167,13 +155,13 @@ class SilvershopJsonResponse extends Extension
 
             $data = $this->getCurrentShoppingCart();
             $data['message'] = [
-                'content' => $this->owner->cart->getMessage(),
-                'type' => $this->owner->cart->getMessageType()
+                'content' => $this->getOwner()->cart->getMessage(),
+                'type' => $this->getOwner()->cart->getMessageType()
             ];
-            $this->owner->cart->clearMessage();
+            $this->getOwner()->cart->clearMessage();
 
-            $this->owner->extend('updateSetQuantityResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateSetQuantityResponseShopJsonResponse', $data, $request, $response, $product, $quantity);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -182,26 +170,24 @@ class SilvershopJsonResponse extends Extension
      *
      * @see 'clear' function of ShoppingCart_Controller ($this->owner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
+     * @param string $response
      */
-    public function updateClearResponse(&$request, &$response)
+    public function updateClearResponse(&$request, &$response): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
 
             $data = $this->getCurrentShoppingCart();
             $data['message'] = [
-                'content' => $this->owner->cart->getMessage(),
-                'type' => $this->owner->cart->getMessageType()
+                'content' => $this->getOwner()->cart->getMessage(),
+                'type' => $this->getOwner()->cart->getMessageType()
             ];
-            $this->owner->cart->clearMessage();
+            $this->getOwner()->cart->clearMessage();
 
-            $this->owner->extend('updateClearResponseShopJsonResponse', $data, $request, $response);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateClearResponseShopJsonResponse', $data, $request, $response);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -210,17 +196,15 @@ class SilvershopJsonResponse extends Extension
      *
      * @see 'addtocart' function of VariationForm ($this->owner)
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $variation [optional]
-     * @param int $quantity [optional]
-     * @param VariationForm $form [optional]
+     * @param string $response
+     * @param Buyable $variation
+     * @param int $quantity
+     * @param VariationForm $form
      */
-    public function updateVariationFormResponse(&$request, &$response, $variation = null, $quantity = 1, $form = null)
+    public function updateVariationFormResponse(&$request, &$response, $variation = null, $quantity = 1, $form = null): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getResponse();
-            }
+            $response = $this->getOwner()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -235,9 +219,8 @@ class SilvershopJsonResponse extends Extension
                 $form->clearMessage();
             }
 
-
-            $this->owner->extend('updateVariationFormResponseShopJsonResponse', $data, $request, $response, $variation, $quantity, $form);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateVariationFormResponseShopJsonResponse', $data, $request, $response, $variation, $quantity, $form);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -246,17 +229,15 @@ class SilvershopJsonResponse extends Extension
      *
      * @see the addtocart function within AddProductForm class
      * @param HTTPRequest $request
-     * @param HTTPResponse $response
-     * @param Buyable $buyable [optional]
-     * @param int $quantity [optional]
-     * @param AddProductForm $form [optional]
+     * @param string $response
+     * @param Buyable $buyable
+     * @param int $quantity
+     * @param AddProductForm $form
      */
-    public function updateAddProductFormResponse(&$request, &$response, $buyable, $quantity, $form)
+    public function updateAddProductFormResponse(&$request, &$response, $buyable, $quantity, $form): void
     {
         if ($request->isAjax()) {
-            if (!$response) {
-                $response = $this->owner->getController()->getResponse();
-            }
+            $response = $this->getOwner()->getController()->getResponse();
             $response->removeHeader('Content-Type');
             $response->addHeader('Content-Type', 'application/json; charset=utf-8');
             $shoppingcart = ShoppingCart::curr();
@@ -271,8 +252,8 @@ class SilvershopJsonResponse extends Extension
                 $form->clearMessage();
             }
 
-            $this->owner->extend('updateAddProductFormResponseShopJsonResponse', $data, $request, $response, $buyable, $quantity, $form);
-            $response->setBody(json_encode($data));
+            $this->getOwner()->extend('updateAddProductFormResponseShopJsonResponse', $data, $request, $response, $buyable, $quantity, $form);
+            $response->setBody(json_encode($data, JSON_HEX_QUOT | JSON_HEX_TAG));
         }
     }
 
@@ -281,7 +262,7 @@ class SilvershopJsonResponse extends Extension
      * Note the id is the cart's id
      * @return array of product id, subTotal, grandTotal, and items & modifiers
      */
-    public function getCurrentShoppingCart()
+    public function getCurrentShoppingCart(): array
     {
         $result = [];
 
@@ -306,9 +287,8 @@ class SilvershopJsonResponse extends Extension
 
     /**
      * Provide a copy of the current order's items, including image details and variations
-     * @return array
      */
-    protected function getCurrentShoppingCartItems()
+    protected function getCurrentShoppingCartItems(): array
     {
         $result = [];
         $shoppingcart = ShoppingCart::curr();
@@ -334,12 +314,7 @@ class SilvershopJsonResponse extends Extension
                 // Image
                 if ($item->Image()) {
                     $image = $item->Image()->ScaleWidth((int) ProductImageExtension::config()->cart_image_width);
-                    $data["image"] = array(
-                        'alt' => $image->getTitle(),
-                        'src' => $image->getAbsoluteURL(),
-                        'width' => $image->getWidth(),
-                        'height' => $image->getHeight(),
-                    );
+                    $data["image"] = ['alt' => $image->getTitle(), 'src' => $image->getAbsoluteURL(), 'width' => $image->getWidth(), 'height' => $image->getHeight()];
                 }
 
                 // Variations
@@ -357,7 +332,7 @@ class SilvershopJsonResponse extends Extension
      * Provide a copy of the current order's modifiers
      * @return array of modifiers (note: this excludes subtotal and grandtotal)
      */
-    protected function getCurrentShoppingCartModifiers()
+    protected function getCurrentShoppingCartModifiers(): array
     {
         $result = [];
         $shoppingcart = ShoppingCart::curr();
@@ -366,11 +341,7 @@ class SilvershopJsonResponse extends Extension
             $modifiers = $shoppingcart->Modifiers();
             foreach ($modifiers->sort('Sort')->getIterator() as $modifier) {
                 if ($modifier->ShowInTable()) {
-                    $data = array(
-                        'id' => (string) $modifier->ID,
-                        'tableTitle' => $modifier->getTableTitle(),
-                        'tableValue' => (float) $modifier->TableValue(),
-                    );
+                    $data = ['id' => (string) $modifier->ID, 'tableTitle' => $modifier->getTableTitle(), 'tableValue' => (float) $modifier->TableValue()];
 
                     if (method_exists($modifier, 'Link')) {
                         // add if there is a link
