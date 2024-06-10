@@ -5,8 +5,9 @@
 	"keywords": ["Silverstripe", "SilverShop", "ecommerce", "ajax", "json"],
 	"license": "MIT",
 	"require": {
-		"silvershop/core": "^3.0",
-        "silverstripe/vendor-plugin": "^1"
+        "php": "^8.1",
+        "silverstripe/cms": "^5",
+		"silvershop/core": "dev-main"
 	},
     "autoload": {
         "psr-4": {
